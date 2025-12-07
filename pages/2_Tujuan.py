@@ -1,0 +1,26 @@
+import streamlit as st
+import pandas as pd
+
+st.title("🎯 Tujuan Keuangan")
+
+with st.form("tujuan_form"):
+    nama = st.text_input("Nama Tujuan", placeholder="Contoh: DP Rumah")
+    target = st.number_input("Target Dana (Rp)", min_value=0)
+    submit = st.form_submit_button("Tambah Tujuan")
+
+if submit:
+    st.success(f"✅ Tujuan '{nama}' dengan target Rp {target:,.0f} ditambahkan.")
+
+data_tujuan = {
+    "Nama": ["DP Rumah", "Liburan Bali"],
+    "Tercapai": [6000000, 2500000],
+    "Target": [10000000, 5000000],
+}
+
+df_tujuan = pd.DataFrame(data_tujuan)
+df_tujuan["Progress"] = df_tujuan["Tercapai"] / df_tujuan["Target"]
+
+st.subheader("📈 Progress Tujuan")
+for _, row in df_tujuan.iterrows():
+    st.text(f"{row['Nama']} (Rp {row['Tercapai']:,.0f} / {row['Target']:,.0f})")
+    st.progress(min(row["Progress"], 1.0))
